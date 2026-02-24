@@ -7,7 +7,14 @@ import { useAuth } from "../context/AuthContext";
 import { resolveImageUrl } from "../utils/imageUrl";
 
 const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "";
-const stripePromise = stripePublicKey ? loadStripe(stripePublicKey) : null;
+let stripePromise = null;
+const getStripe = () => {
+  if (!stripePublicKey) return null;
+  if (!stripePromise) {
+    stripePromise = loadStripe(stripePublicKey);
+  }
+  return stripePromise;
+};
 
 const CartDrawer = () => {
   const {
@@ -34,7 +41,8 @@ const CartDrawer = () => {
     }
 
     try {
-      if (!stripePromise) {
+      const stripeLoader = getStripe();
+      if (!stripeLoader) {
         toast.error("Chiave Stripe pubblica mancante nel frontend");
         return;
       }
@@ -45,7 +53,7 @@ const CartDrawer = () => {
 
       const { data } = await api.post("/orders/checkout-session", payload);
 
-      const stripe = await stripePromise;
+      const stripe = await stripeLoader;
       if (stripe && data.sessionId) {
         const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
         if (result?.error) {

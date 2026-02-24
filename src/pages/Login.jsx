@@ -66,6 +66,7 @@ const Login = () => {
               <input
                 className="input"
                 placeholder="Username o email"
+                autoComplete="username"
                 value={form.usernameOrEmail}
                 onChange={(e) => setForm((prev) => ({ ...prev, usernameOrEmail: e.target.value }))}
                 required
@@ -74,6 +75,7 @@ const Login = () => {
                 className="input"
                 placeholder="Password"
                 type="password"
+                autoComplete="current-password"
                 value={form.password}
                 onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
                 required

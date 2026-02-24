@@ -31,6 +31,7 @@ const Register = () => {
           <input
             className="input"
             placeholder="Username"
+            autoComplete="username"
             value={form.username}
             onChange={(e) => setForm((prev) => ({ ...prev, username: e.target.value }))}
             required
@@ -39,6 +40,7 @@ const Register = () => {
             className="input"
             type="email"
             placeholder="Email"
+            autoComplete="email"
             value={form.email}
             onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
             required
@@ -47,6 +49,7 @@ const Register = () => {
             className="input"
             type="password"
             placeholder="Password"
+            autoComplete="new-password"
             value={form.password}
             onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
             required
