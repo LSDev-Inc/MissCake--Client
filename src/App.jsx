@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
 import Navbar from "./components/Navbar";
 import CartDrawer from "./components/CartDrawer";
 import LoadingScreen from "./components/LoadingScreen";
@@ -83,6 +84,7 @@ function App() {
           </Routes>
         </motion.main>
       </AnimatePresence>
+      <Analytics />
     </>
   );
 }
