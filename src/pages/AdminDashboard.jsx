@@ -19,7 +19,7 @@ const SectionCard = ({ title, subtitle, onClick }) => (
   </motion.button>
 );
 
-const formatOrderStatus = (status) => (status === "Completato" ? "Concluso" : status || "In attesa");
+const formatOrderStatus = (status) => status || "In attesa";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -356,6 +356,7 @@ const AdminDashboard = () => {
               >
                 <option value="In attesa">In attesa</option>
                 <option value="In preparazione">In preparazione</option>
+                <option value="Completato">Completato</option>
                 <option value="Concluso">Concluso</option>
               </select>
               <input

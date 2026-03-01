@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const AUTH_TOKEN_STORAGE_KEY = "authToken";
+
 const normalizeApiBaseUrl = (value) => {
   if (!value) return "";
   const trimmed = value.replace(/\/+$/, "");
@@ -49,6 +51,24 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+  if (typeof window === "undefined") {
+    return config;
+  }
+
+  const token = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+  if (!token) {
+    return config;
+  }
+
+  config.headers = config.headers || {};
+  if (!config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -74,3 +94,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+export { AUTH_TOKEN_STORAGE_KEY };

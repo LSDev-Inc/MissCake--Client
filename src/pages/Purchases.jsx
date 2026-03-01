@@ -4,7 +4,7 @@ import Modal from "../components/Modal";
 import api from "../services/api";
 import { handleImageError, resolveImageUrl } from "../utils/imageUrl";
 
-const formatOrderStatus = (status) => (status === "Completato" ? "Concluso" : status || "In attesa");
+const formatOrderStatus = (status) => status || "In attesa";
 
 const Purchases = () => {
   const [orders, setOrders] = useState([]);
