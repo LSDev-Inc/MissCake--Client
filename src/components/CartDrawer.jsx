@@ -1,20 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { loadStripe } from "@stripe/stripe-js";
 import api from "../services/api";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { resolveImageUrl } from "../utils/imageUrl";
-
-const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "";
-let stripePromise = null;
-const getStripe = () => {
-  if (!stripePublicKey) return null;
-  if (!stripePromise) {
-    stripePromise = loadStripe(stripePublicKey);
-  }
-  return stripePromise;
-};
+import { handleImageError, resolveImageUrl } from "../utils/imageUrl";
 
 const CartDrawer = () => {
   const {
@@ -41,25 +30,13 @@ const CartDrawer = () => {
     }
 
     try {
-      const stripeLoader = getStripe();
-      if (!stripeLoader) {
-        toast.error("Chiave Stripe pubblica mancante nel frontend");
-        return;
-      }
-
       const payload = {
         items: items.map((item) => ({ productId: item._id, quantity: item.quantity })),
       };
 
       const { data } = await api.post("/orders/checkout-session", payload);
 
-      const stripe = await stripeLoader;
-      if (stripe && data.sessionId) {
-        const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-        if (result?.error) {
-          throw new Error(result.error.message);
-        }
-      } else if (data.checkoutUrl) {
+      if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
       } else {
         throw new Error("Impossibile avviare il checkout Stripe");
@@ -109,7 +86,12 @@ const CartDrawer = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <div className="flex gap-3">
-                      <img src={resolveImageUrl(item.image)} alt={item.title} className="h-16 w-16 rounded-lg object-cover" />
+                      <img
+                        src={resolveImageUrl(item.image)}
+                        alt={item.title}
+                        className="h-16 w-16 rounded-lg object-cover"
+                        onError={handleImageError}
+                      />
                       <div className="flex-1">
                         <p className="font-semibold">{item.title}</p>
                         <p className="text-sm text-slate-500">EUR {item.price.toFixed(2)}</p>

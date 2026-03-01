@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import Modal from "../components/Modal";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
-import { resolveImageUrl } from "../utils/imageUrl";
+import { handleImageError, resolveImageUrl } from "../utils/imageUrl";
 
 const SectionCard = ({ title, subtitle, onClick }) => (
   <motion.button
@@ -335,6 +335,7 @@ const AdminDashboard = () => {
                       src={resolveImageUrl(item.product?.image)}
                       alt={item.product?.title || "Prodotto"}
                       className="h-16 w-16 rounded-lg object-cover"
+                      onError={handleImageError}
                     />
                     <div>
                       <p className="font-semibold">{item.product?.title || "Prodotto rimosso"}</p>

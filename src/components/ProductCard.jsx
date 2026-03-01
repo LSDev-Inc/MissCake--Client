@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useCart } from "../context/CartContext";
-import { resolveImageUrl } from "../utils/imageUrl";
+import { handleImageError, resolveImageUrl } from "../utils/imageUrl";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -20,6 +20,7 @@ const ProductCard = ({ product }) => {
           alt={product.title}
           className="h-full w-full rounded-lg object-contain"
           loading="lazy"
+          onError={handleImageError}
         />
       </div>
       <div className="space-y-3 p-4">
