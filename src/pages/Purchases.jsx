@@ -4,6 +4,8 @@ import Modal from "../components/Modal";
 import api from "../services/api";
 import { resolveImageUrl } from "../utils/imageUrl";
 
+const formatOrderStatus = (status) => (status === "Completato" ? "Concluso" : status || "In attesa");
+
 const Purchases = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,7 +73,7 @@ const Purchases = () => {
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <p className="font-semibold">Ordine #{order._id.slice(-8).toUpperCase()}</p>
                 <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
-                  {order.status}
+                  {formatOrderStatus(order.status)}
                 </span>
               </div>
               <p className="text-sm text-slate-600">Data: {new Date(order.createdAt).toLocaleString()}</p>
@@ -89,7 +91,7 @@ const Purchases = () => {
               <p className="font-semibold">Ordine #{selectedOrder._id.slice(-8).toUpperCase()}</p>
               <p className="text-sm text-slate-600">Data: {new Date(selectedOrder.createdAt).toLocaleString()}</p>
               <p className="text-sm text-slate-600">Totale: EUR {Number(selectedOrder.totalAmount).toFixed(2)}</p>
-              <p className="text-sm text-slate-600">Stato: {selectedOrder.status}</p>
+              <p className="text-sm text-slate-600">Stato: {formatOrderStatus(selectedOrder.status)}</p>
               {selectedOrder.remainingTime ? <p className="text-sm text-slate-600">Tempo rimanente: {selectedOrder.remainingTime}</p> : null}
               {selectedOrder.adminComment ? <p className="text-sm text-slate-600">Commento staff: {selectedOrder.adminComment}</p> : null}
             </div>

@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const RAW_API_URL = import.meta.env.VITE_API_URL || "https://misscake-sdr.onrender.com/api";
-
 const normalizeApiBaseUrl = (value) => {
   if (!value) return "";
   const trimmed = value.replace(/\/+$/, "");
@@ -11,7 +9,36 @@ const normalizeApiBaseUrl = (value) => {
   return `${trimmed}/api`;
 };
 
-const API_BASE_URL = normalizeApiBaseUrl(RAW_API_URL);
+const isLocalHostname = (hostname) => hostname === "localhost" || hostname === "127.0.0.1";
+
+const getLocalApiBaseUrl = () => {
+  const { protocol, hostname } = window.location;
+  const apiPort = import.meta.env.VITE_API_PORT || "4000";
+  return `${protocol}//${hostname}:${apiPort}/api`;
+};
+
+const getDefaultApiBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    const { hostname } = window.location;
+
+    if (isLocalHostname(hostname)) {
+      return getLocalApiBaseUrl();
+    }
+  }
+
+  return "https://misscake-sdr.onrender.com/api";
+};
+
+const forceRemoteApi = import.meta.env.VITE_USE_REMOTE_API === "true";
+const envApiUrl = import.meta.env.VITE_API_URL;
+
+const RAW_API_URL =
+  typeof window !== "undefined" && isLocalHostname(window.location.hostname) && !forceRemoteApi
+    ? getLocalApiBaseUrl()
+    : envApiUrl || getDefaultApiBaseUrl();
+
+export const API_BASE_URL = normalizeApiBaseUrl(RAW_API_URL);
+export const SERVER_ORIGIN = API_BASE_URL.replace(/\/api$/, "");
 
 const api = axios.create({
   baseURL: API_BASE_URL,

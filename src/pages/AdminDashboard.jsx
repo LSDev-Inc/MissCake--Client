@@ -19,6 +19,8 @@ const SectionCard = ({ title, subtitle, onClick }) => (
   </motion.button>
 );
 
+const formatOrderStatus = (status) => (status === "Completato" ? "Concluso" : status || "In attesa");
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { isOwner } = useAuth();
@@ -128,7 +130,7 @@ const AdminDashboard = () => {
   const openOrderModal = (order) => {
     setSelectedOrder(order);
     setOrderUpdateForm({
-      status: order.status || "In attesa",
+      status: formatOrderStatus(order.status),
       remainingTime: order.remainingTime || "",
       adminComment: order.adminComment || "",
     });
@@ -255,7 +257,7 @@ const AdminDashboard = () => {
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-semibold">{order.user?.username || "Utente"}</p>
-                    <p className="text-sm text-brand-700">{order.status}</p>
+                    <p className="text-sm text-brand-700">{formatOrderStatus(order.status)}</p>
                   </div>
                   <p className="text-sm text-slate-600">
                     {new Date(order.createdAt).toLocaleString()} | Totale EUR {Number(order.totalAmount).toFixed(2)}
@@ -353,7 +355,7 @@ const AdminDashboard = () => {
               >
                 <option value="In attesa">In attesa</option>
                 <option value="In preparazione">In preparazione</option>
-                <option value="Completato">Completato</option>
+                <option value="Concluso">Concluso</option>
               </select>
               <input
                 className="input"
